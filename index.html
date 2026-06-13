@@ -1,56 +1,354 @@
+<!doctype html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="assets/style.css">
-  <script src="https://kit.fontawesome.com/29b275fb0c.js" crossorigin="anonymous"></script>
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Password Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
 
-  <title>Scrimba | Random Password Generator</title>
+  <style>
+    :root {
+      --bg-dark: #1f2937;
+      --card-bg: #1f232e;
+      --text-white: #ffffff;
+      --accent-green: #10b981;
+      --slider-blue: #3b82f6;
+      --box-bg: #273549;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-white);
+      padding: 20px;
+    }
+
+    /* Main Card Container */
+    .card {
+      background-color: var(--card-bg);
+      width: 100%;
+      max-width: 550px;
+      padding: 50px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 30px;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--accent-green);
+    }
+
+    /* Controls Section */
+    .controls {
+      margin-bottom: 25px;
+    }
+
+    .length-label {
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+      color: var(--text-white);
+    }
+
+    .length-label span {
+      color: var(--accent-green);
+      font-weight: bold;
+    }
+
+    .slider {
+      -webkit-appearance: none;
+      width: 60%;
+      height: 6px;
+      border-radius: 5px;
+      background: #e5e7eb;
+      outline: none;
+      margin-bottom: 30px;
+      display: block;
+    }
+
+    /* Slider Thumb styling */
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--slider-blue);
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--slider-blue);
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Generate Button */
+    .btn-generate {
+      background-color: var(--accent-green);
+      color: var(--text-white);
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .btn-generate:hover {
+      background-color: #059669;
+    }
+
+    hr {
+      border: none;
+      border-top: 2px solid #2f3e53;
+      margin: 35px 0;
+    }
+
+    /* Password Boxes Grid */
+    .password-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .password-box {
+      background-color: var(--box-bg);
+      color: var(--accent-green);
+      padding: 14px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      min-height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: all;
+      /* Allows easy copying on click */
+      cursor: pointer;
+    }
+
+    /* Footer styling */
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+  </style>
 </head>
 
 <body>
-  <main class="flex">
-    <div class="container">
-      <div class="upperSection">
-        <h1 class="title">Generate a<br><span class="title-green">random password</span></h1>
-        <h2 class="subtitle">Never use an insecure password again.</h2>
-        <span id="password-slider-text">Length: <label for="slider" id="sliderNumber">11</label></span>
+  <div class="card">
+    <h1>
+      Generate a
+      <span>random password</span>
+    </h1>
 
-        <input type="range" min="11" max="18" value="11" class="slider" id="slider" name="slider"></input>
-
-        <button class="btn" onclick="getGeneratePasswords()"><i class="fa-solid fa-bolt"></i>Generate
-          passwords</button>
-
+    <div class="controls">
+      <div class="length-label">
+        Length:
+        <span id="length-val">11</span>
       </div>
-
-      <hr class="center-ball">
-      <div class="bottomSection">
-        <div class="generatedPassword" id="password1-el"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
-        </div>
-        <div class="generatedPassword" id="password2-el"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
-        </div>
-        <div class="generatedPassword" id="password3-el"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
-        </div>
-        <div class="generatedPassword" id="password4-el"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
-        </div>
-        <div id="letter-main"></div>
-      </div>
+      <input type="range" min="8" max="20" value="11" class="slider" id="length-slider" />
     </div>
 
-  </main>
+    <button class="btn-generate" id="generate-btn">
+      <svg width="12" height="18" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M10.3333 0H1.16667C0.733333 0 0.444444 0.444444 0.638889 0.833333L4.13889 7.77778H0.583333C0.166667 7.77778 -0.0833333 8.27778 0.166667 8.61111L10.6667 22.1667C11.0278 22.6111 11.75 22.25 11.6111 21.6944L9.16667 12.2222H11.4167C11.8889 12.2222 12.1667 11.7222 11.9444 11.3333L10.8333 0.5C10.7778 0.222222 10.5833 0 10.3333 0Z"
+          fill="white" />
+      </svg>
+      Generate passwords
+    </button>
 
-  <!-- FOOTER -->
+    <hr />
+
+    <div class="password-grid">
+      <div class="password-box" class="pw-output">...</div>
+      <div class="password-box" class="pw-output">...</div>
+      <div class="password-box" class="pw-output">...</div>
+      <div class="password-box" class="pw-output">...</div>
+    </div>
+  </div>
+
   <footer>
-    <div class="attribution">
-      <span> Project by <a href="https://scrimba.com/learn/learnjavascript/" target="_blank">Scrimba</a>.<br>
-         by <a href="https://github.com/codelikeagirl29" target="_blank">Lindsey</a>.</span>
-    </div>
+    Project for
+    <a href="https://www.frontendmentor.io/solutions/password-generator-BuoU7EI4-L">
+      frontendmentor.io
+    </a>
+    .
+    <br />
+    by Lindsey.
   </footer>
 
-  <script src="assets/script.js"></script>
+  <script>
+    // Character pool array containing letters, numbers, and symbols
+    const characters = [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z",
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+      "f",
+      "g",
+      "h",
+      "i",
+      "j",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "q",
+      "r",
+      "s",
+      "t",
+      "u",
+      "v",
+      "w",
+      "x",
+      "y",
+      "z",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "~",
+      "`",
+      "!",
+      "@",
+      "#",
+      "$",
+      "%",
+      "^",
+      "&",
+      "*",
+      "(",
+      ")",
+      "_",
+      "-",
+      "+",
+      "=",
+      "{",
+      "[",
+      "}",
+      "]",
+      ",",
+      "|",
+      ":",
+      ";",
+      "<",
+      ">",
+      ".",
+      "?",
+      "/"
+    ];
+
+    // DOM elements
+    const slider = document.getElementById("length-slider");
+    const lengthVal = document.getElementById("length-val");
+    const generateBtn = document.getElementById("generate-btn");
+    const passwordBoxes = document.querySelectorAll(".password-box");
+
+    // Update the visual length text dynamically when moving the slider
+    slider.addEventListener("input", function () {
+      lengthVal.textContent = slider.value;
+    });
+
+    // Function to generate a single random password string
+    function generatePassword(length) {
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        let randomIndex = Math.floor(Math.random() * characters.length);
+        password += characters[randomIndex];
+      }
+      return password;
+    }
+
+    // Event listener for the generate button
+    generateBtn.addEventListener("click", function () {
+      const passwordLength = parseInt(slider.value);
+
+      // Loop through all 4 boxes and assign a new random password
+      passwordBoxes.forEach((box) => {
+        box.textContent = generatePassword(passwordLength);
+      });
+    });
+
+    // Optional UX Feature: Click a password box to copy it to the clipboard
+    passwordBoxes.forEach((box) => {
+      box.addEventListener("click", function () {
+        if (box.textContent !== "...") {
+          navigator.clipboard.writeText(box.textContent);
+          alert("Password copied to clipboard!");
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
